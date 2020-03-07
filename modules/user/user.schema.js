@@ -32,6 +32,13 @@ const UserSchema = new Schema(
       maxlength: [20, 'Phone number should be less than 20 characters']
       // match: [/^(\+2)?01([0-9]{9})$/, 'Please add a valid Phone number']
     },
+    phoneVerification: {
+      type: {
+        token: { type: String },
+        tokenExpiration: { type: Date },
+        isVerified: { type: Boolean, default: false }
+      }
+    },
     email: {
       // required: [true, 'Please add an email'],
       type: String,
@@ -44,6 +51,13 @@ const UserSchema = new Schema(
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         'Please add a valid Mail'
       ]
+    },
+    emailVerification: {
+      type: {
+        token: { type: String },
+        tokenExpiration: { type: Date },
+        isVerified: { type: Boolean, default: false }
+      }
     },
     googleId: {
       type: String,
@@ -88,12 +102,15 @@ const UserSchema = new Schema(
 );
 
 // Encrypt password using bcrypt
-UserSchema.pre('save', async function() {
+UserSchema.pre('save', async function(next) {
   if (this.isNew) {
-    const salt = await bcrypt.genSalt(+config.salt);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.email = this.email.toLowerCase();
   }
-  this.email = this.email.toLowerCase();
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(+config.salt);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 // Sign jwt

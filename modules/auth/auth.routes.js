@@ -5,11 +5,23 @@ const requestValidator = require('../../common/middleware/requestValidator');
 const {
   customerRegisterController,
   loginController,
-  successCallbackController
+  successCallbackController,
+  verifyPhoneNumberController,
+  confirmPhoneNumberController,
+  verifyEmailController,
+  confirmEmailController,
+  forgetPasswordController,
+  resetPasswordController
 } = require('./controllers');
 const {
   customerRegisterSchema,
-  loginSchema
+  loginSchema,
+  phoneVerificationSchema,
+  phoneConfirmationSchema,
+  emailVerificationSchema,
+  emailConfirmationSchema,
+  forgetPasswordSchema,
+  resetPasswordSchema
 } = require('./joi/validationSchemas');
 
 const router = express.Router();
@@ -20,7 +32,36 @@ router.post(
   customerRegisterController
 );
 router.post('/login', requestValidator(loginSchema), loginController);
-
+router.post(
+  '/phone/:phoneNumber:/verify',
+  requestValidator(phoneVerificationSchema),
+  verifyPhoneNumberController
+);
+router.post(
+  '/phone/:phoneNumber:/confirm',
+  requestValidator(phoneConfirmationSchema),
+  confirmPhoneNumberController
+);
+router.post(
+  'email/verify',
+  requestValidator(emailVerificationSchema),
+  verifyEmailController
+);
+router.post(
+  '/email/:encodedMail/confirm',
+  requestValidator(emailConfirmationSchema),
+  confirmEmailController
+);
+router.post(
+  '/forget-password',
+  requestValidator(forgetPasswordSchema),
+  forgetPasswordController
+);
+router.put(
+  '/reset-password/:token',
+  requestValidator(resetPasswordSchema),
+  resetPasswordController
+);
 router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 
 router.get(
