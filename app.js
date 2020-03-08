@@ -73,5 +73,7 @@ initApp(app);
 
 app.listen(config.app.port, () => {
   // eslint-disable-next-line no-console
-  console.log(`U Med Mi is up & running on ${config.app.port}`);
+  console.log(
+    `Boilerplate is up & running on port ${config.app.port} on environnement ${process.env.NODE_ENV}`
+  );
 });

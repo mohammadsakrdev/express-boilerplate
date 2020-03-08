@@ -5,7 +5,7 @@ const { OK } = require('http-status-codes');
 const healthCheck = (req, res, next) => {
   return res.status(OK).json({
     success: true,
-    message: 'U Med Mi is up & running.',
+    message: 'Boilerplate is up & running.',
     data: null
   });
 };

@@ -1,14 +1,26 @@
 # version of node to use
 FROM node:11.5.0
 
-#ENV NODE_ENV="prod"
+ENV NODE_ENV=production
 
-# define working directory for docker
+# make dir for the application build output
+RUN mkdir -p /usr/src/app
+RUN chown node -R /usr/src/app
+
+# install some useful dependicies
+RUN apt-get update && apt-get install -y git curl wget g++ make python bzip2
+
+# copy package.json and install npm dependicies
 WORKDIR /usr/src/app
+COPY package.json ./
+RUN npm install --only=production --allow-root && npm install -g pm2
+
 # copy all our source code into the working directory
 COPY . .
-# install npm dependencies and pm2
-RUN npm install --only=production && npm install -g pm2
+
+# change the root user for security reasons
+USER node
+
 # expose port 3000 for our server to run on
 EXPOSE 3000
 

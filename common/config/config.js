@@ -1,6 +1,3 @@
-// config.js
-const env = process.env.NODE_ENV; // 'development' or 'test'
-
 const development = {
   app: {
     port: parseInt(process.env.PORT, 0) || 3000
@@ -141,4 +138,4 @@ const config = {
   production
 };
 
-module.exports = config[env];
+module.exports = config[process.env.NODE_ENV];
