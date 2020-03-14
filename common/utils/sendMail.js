@@ -1,20 +1,10 @@
-/* eslint-disable no-console */
-const nodemailer = require('nodemailer');
-const mandrillTransport = require('nodemailer-mandrill-transport');
 const to = require('await-to-js').default;
+const mandrill = require('node-mandrill');
 const { promisify } = require('util');
 
 const config = require('../config/config');
 
-const transport = nodemailer.createTransport(
-  mandrillTransport({
-    auth: {
-      apiKey: config.manDrill.apiKey
-    }
-  })
-);
-
-const sendMail = promisify(transport.sendMail);
+const request = promisify(mandrill(config.manDrill.apiKey));
 
 /**
  * @function
@@ -29,13 +19,13 @@ const sendMail = promisify(transport.sendMail);
  */
 module.exports = async data => {
   const [err, result] = await to(
-    sendMail({
-      from: config.manDrill.fromMail,
-      to: data.email,
-      replyTo: config.manDrill.fromMail,
-      subject: data.subject,
-      text: data.message,
-      html: data.html
+    request('/messages/send', {
+      message: {
+        to: [{ email: data.email, name: data.name }],
+        from_email: config.manDrill.fromMail,
+        subject: data.subject,
+        text: data.html
+      }
     })
   );
   if (err) {

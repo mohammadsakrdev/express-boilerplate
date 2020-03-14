@@ -7,14 +7,13 @@ const passport = require('passport');
 
 const ErrorResponse = require('../utils/errorResponse');
 const rbac = require('../rbac/rbac');
-const asyncHandler = require('./async');
 
 const isAuthorized = endPointName => {
-  return asyncHandler((req, res, next) => {
+  return (req, res, next) => {
     try {
       if (
-        !req.headers.authorization &&
-        !req.headers.authorization.startWith('Bearer')
+        !req.headers.authorization ||
+        !req.headers.authorization.startsWith('Bearer')
       ) {
         return next(new ErrorResponse('Unauthorized', UNAUTHORIZED));
       }
@@ -22,7 +21,6 @@ const isAuthorized = endPointName => {
       if (!token) {
         return next(new ErrorResponse('Unauthorized', UNAUTHORIZED));
       }
-
       passport.authenticate('jwt', { session: false }, async (err, user) => {
         if (err) {
           return next(new ErrorResponse(err.message, INTERNAL_SERVER_ERROR));
@@ -38,11 +36,11 @@ const isAuthorized = endPointName => {
           );
         }
         return next();
-      });
+      })(req, res, next);
     } catch (err) {
       return next(new ErrorResponse(err.message, INTERNAL_SERVER_ERROR));
     }
-  });
+  };
 };
 
 module.exports = isAuthorized;

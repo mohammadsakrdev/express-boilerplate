@@ -21,10 +21,10 @@ module.exports = {
       }
     },
     example: {
-      fullName: 'test1',
-      phoneNumber: '0102839381',
-      userName: 'test1',
-      email: 'TEST@yahoo.com',
+      fullName: 'test',
+      phoneNumber: '010283938',
+      userName: 'test',
+      email: 'test@yahoo.com',
       password: '123456'
     }
   },
@@ -43,6 +43,45 @@ module.exports = {
     example: {
       userName: 'test',
       password: '123456'
+    }
+  },
+  VerifymailRequest: {
+    title: 'VerifymailRequest',
+    required: ['email'],
+    type: 'object',
+    properties: {
+      email: {
+        type: 'string'
+      }
+    },
+    example: {
+      email: 'mohamed.sakr@bosta.co'
+    }
+  },
+  ConfirmMailRequest: {
+    title: 'ConfirmMailRequest',
+    required: ['token'],
+    type: 'object',
+    properties: {
+      token: {
+        type: 'string'
+      }
+    },
+    example: {
+      token: 'FOtj/cFDBmC5'
+    }
+  },
+  ConfirmphoneRequest: {
+    title: 'ConfirmphoneRequest',
+    required: ['token'],
+    type: 'object',
+    properties: {
+      token: {
+        type: 'string'
+      }
+    },
+    example: {
+      token: '312357'
     }
   }
 };

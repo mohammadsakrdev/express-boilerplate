@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const { OK, NO_CONTENT } = require('http-status-codes');
-const cryptoRandomString = require('crypto-random-string');
+const crypto = require('crypto');
 
 const asyncHandler = require('../../../common/middleware/async');
 const User = require('../../user/user.schema');
@@ -9,27 +9,25 @@ const ErrorResponse = require('../../../common/utils/errorResponse');
 const sendMail = require('../../../common/utils/sendMail');
 const config = require('../../../common/config/config');
 
-// @desc      Verify email
-// @route     POST /api/v0/auth/email/verify
+// @desc      Forget password
+// @route     POST /api/v0/auth/forget-password
 // @access    Public
 module.exports = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
-  const token = cryptoRandomString({ length: 12, type: 'base64' });
-  const tokenExpiration = generateExpirationDate();
-  const encodedMail = Buffer.from(email).toString('base64');
-  const link = `${req.protocol}://${req.get('host')}/${
-    config.baseUrl
-  }/auth/email/${encodedMail}/confirm/${token}`;
-  const html = `Hello,<br> Please Click on the link to verify your email.
-    <br><a href=${link}>Click here to verify</a>`;
+  const resetPasswordExpire = generateExpirationDate(1);
+  const token = crypto.randomBytes(20).toString('hex');
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
 
   const user = await User.findOneAndUpdate(
     { email },
     {
       $set: {
-        'emailVerification.token': token,
-        'emailVerification.tokenExpiration': tokenExpiration
+        resetPasswordToken,
+        resetPasswordExpire
       }
     },
     { new: true, runValidators: true }
@@ -39,16 +37,22 @@ module.exports = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Email not found', NO_CONTENT));
   }
 
+  const link = `${req.protocol}://${req.get('host')}/${
+    config.baseUrl
+  }/auth/reset-password/${token}`;
+  const html = `Hello,<br> Please Click on the link to reset your password.
+    <br><a href=${link}>Click here to reset</a>`;
+
   await sendMail({
     email,
     name: user.fullName,
     html,
-    subject: 'Please confirm your Email account'
+    subject: 'Please reset your password'
   });
 
   return res.status(OK).json({
     status: true,
-    message: 'Verification link sent to your email',
+    message: 'Reset password done successfully',
     data: null
   });
 });
