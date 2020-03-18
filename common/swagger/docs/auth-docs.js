@@ -412,5 +412,96 @@ module.exports = {
       },
       deprecated: false
     }
+  },
+  '/auth/forget-password': {
+    post: {
+      summary: 'Forget password',
+      tags: ['Auth'],
+      operationId: 'Forgetpassword',
+      deprecated: false,
+      produces: ['application/json'],
+      parameters: [
+        {
+          name: 'Body',
+          in: 'body',
+          required: true,
+          description: '',
+          schema: {
+            $ref: '#/definitions/ForgetpasswordRequest'
+          }
+        }
+      ],
+      responses: {
+        200: {
+          description: 'Ok',
+          headers: {},
+          examples: {
+            'application/json': {
+              status: true,
+              message: 'Reset password link sent successfully',
+              data: null
+            }
+          }
+        },
+        400: {
+          description: 'Bad request'
+        },
+        500: {
+          description: 'Server Error'
+        },
+        401: {
+          description: 'UnAuthorized'
+        }
+      }
+    }
+  },
+  '/auth/reset-password/{token}': {
+    put: {
+      summary: 'Reset password',
+      tags: ['Auth'],
+      operationId: 'Resetpassword',
+      deprecated: false,
+      produces: ['application/json'],
+      parameters: [
+        {
+          name: 'token',
+          in: 'path',
+          required: true,
+          type: 'string',
+          description: ''
+        },
+        {
+          name: 'Body',
+          in: 'body',
+          required: true,
+          description: '',
+          schema: {
+            $ref: '#/definitions/ResetpasswordRequest'
+          }
+        }
+      ],
+      responses: {
+        200: {
+          description: 'Ok',
+          headers: {},
+          examples: {
+            'application/json': {
+              status: true,
+              message: 'Reset password successfully.',
+              data: null
+            }
+          }
+        },
+        400: {
+          description: 'Bad request'
+        },
+        500: {
+          description: 'Server Error'
+        },
+        401: {
+          description: 'UnAuthorized'
+        }
+      }
+    }
   }
 };

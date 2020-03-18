@@ -112,6 +112,7 @@ UserSchema.pre('save', async function(next) {
   }
   const salt = await bcrypt.genSalt(+config.salt);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
 // Sign jwt

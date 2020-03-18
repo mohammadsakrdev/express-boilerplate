@@ -14,7 +14,6 @@ const config = require('../../../common/config/config');
 // @access    Public
 module.exports = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
-
   const resetPasswordExpire = generateExpirationDate(1);
   const token = crypto.randomBytes(20).toString('hex');
   const resetPasswordToken = crypto
@@ -37,7 +36,7 @@ module.exports = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Email not found', NO_CONTENT));
   }
 
-  const link = `${req.protocol}://${req.get('host')}/${
+  const link = `${req.protocol}://${req.get('host')}${
     config.baseUrl
   }/auth/reset-password/${token}`;
   const html = `Hello,<br> Please Click on the link to reset your password.
@@ -52,7 +51,7 @@ module.exports = asyncHandler(async (req, res, next) => {
 
   return res.status(OK).json({
     status: true,
-    message: 'Reset password done successfully',
+    message: 'Reset password link sent successfully',
     data: null
   });
 });

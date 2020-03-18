@@ -15,32 +15,27 @@ const config = require('../../../common/config/config');
 module.exports = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const { password } = req.body;
-
-  const resetPasswordExpire = generateExpirationDate(1);
   const resetPasswordToken = crypto
     .createHash('sha256')
     .update(token)
     .digest('hex');
 
-  const user = await User.findOneAndUpdate(
-    { resetPasswordToken, resetPasswordExpire: { $gt: Date.now() } },
-    {
-      $set: {
-        password,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
-      }
-    },
-    { new: true, runValidators: true }
-  );
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() }
+  });
 
   if (!user) {
     return next(new ErrorResponse('Token not found or invalid', NO_CONTENT));
   }
+  user.password = password;
+  user.resetPasswordExpire = null;
+  user.resetPasswordToken = null;
+  await user.save();
 
   return res.status(OK).json({
     status: true,
-    message: 'Verification code sent to phone number',
+    message: 'Reset password successfully.',
     data: null
   });
 });

@@ -83,5 +83,31 @@ module.exports = {
     example: {
       token: '312357'
     }
+  },
+  ForgetpasswordRequest: {
+    title: 'ForgetpasswordRequest',
+    example: {
+      email: 'test@yahoo.com'
+    },
+    type: 'object',
+    properties: {
+      email: {
+        type: 'string'
+      }
+    },
+    required: ['email']
+  },
+  ResetpasswordRequest: {
+    title: 'ResetpasswordRequest',
+    example: {
+      password: '12345678'
+    },
+    type: 'object',
+    properties: {
+      password: {
+        type: 'string'
+      }
+    },
+    required: ['password']
   }
 };
