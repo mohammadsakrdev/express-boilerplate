@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 const { CREATED } = require('http-status-codes');
 
-const asyncHandler = require('../../../common/middleware/async');
+const asyncHandler = require('../../../../common/middleware/async');
 const User = require('../../user/user.schema');
-const { ROLE_CUSTOMER } = require('../../user/roles');
+const { CUSTOMER } = require('../../../../common/enum/roles');
 
 // @desc      Register customer
 // @route     POST /api/v0/auth/register
@@ -19,7 +19,7 @@ module.exports = asyncHandler(async (req, res, next) => {
     email,
     password,
     photo,
-    roles: [ROLE_CUSTOMER]
+    roles: [CUSTOMER]
   });
 
   return res

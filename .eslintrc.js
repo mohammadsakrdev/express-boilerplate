@@ -51,8 +51,8 @@ module.exports = {
     'object-curly-newline': [
       'error',
       {
+        consistent: true,
         ObjectPattern: { multiline: true },
-        ImportDeclaration: 'never',
         ExportDeclaration: { multiline: true, minProperties: 3 }
       }
     ],
@@ -85,6 +85,8 @@ module.exports = {
     'object-shorthand': 'error',
     'func-name': 'off',
     'array-callback-return': 'off',
-    'func-names': ['error', 'never']
+    'func-names': ['error', 'never'],
+    'no-underscore-dangle': 'off',
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }]
   }
 };

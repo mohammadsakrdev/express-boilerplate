@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const config = require('../../common/config/config');
-const roles = require('./roles');
+const roles = require('../../common/enum/roles');
 
 const { Schema } = mongoose;
 
@@ -85,7 +85,7 @@ const UserSchema = new Schema(
       type: [String],
       required: true,
       enum: Object.values(roles),
-      default: [roles.ROLE_CUSTOMER]
+      default: [roles.CUSTOMER]
     },
     password: {
       // salted and hashed using bcrypt

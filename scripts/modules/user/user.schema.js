@@ -85,7 +85,7 @@ const UserSchema = new Schema(
       type: [String],
       required: true,
       enum: Object.values(roles),
-      default: [roles.ROLE_CUSTOMER]
+      default: [roles.CUSTOMER]
     },
     password: {
       // salted and hashed using bcrypt

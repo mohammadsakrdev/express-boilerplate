@@ -9,6 +9,8 @@ sudo npm install -g pm2
 pm2 startup systemd
 sudo apt-get install nginx ufw -y
 sudo ufw allow ssh
+sudo ufw allow https
+sudo ufw allow http
 sudo ufw allow 'Nginx HTTP' 
 sudo ufw allow 'Nginx Full'
 yes | sudo ufw enable
