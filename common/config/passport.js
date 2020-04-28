@@ -51,7 +51,7 @@ passport.use(
             email
           });
         }
-        return done(null, user);
+        done(null, user);
       } catch (err) {
         done(err);
       }
@@ -67,6 +67,7 @@ passport.use(
       callbackURL: config.facebook.callbackURL,
       profileFields: [
         'id',
+        'photos',
         'displayName',
         'email',
         'first_name',
@@ -76,18 +77,27 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const email = profile.emails[0].value || profile._json.email;
-        const { id: facebookId, displayName: fullName } = profile;
-        const { first_name: firstName, last_name: lastName } = profile._json;
+        const email = profile._json.email || profile.emails[0].value;
+        const { id: facebookId, displayName: fullName, photos } = profile;
+        const {
+          first_name: firstName,
+          last_name: lastName,
+          picture
+        } = profile._json;
+        let photo = picture.data.url;
+        if (!photo) {
+          photo = photos.length ? photos[0].value : null;
+        }
         let user = await User.findOne({ facebookId });
         if (!user) {
           user = await User.create({
             facebookId,
             fullName: fullName || `${firstName} ${lastName}`,
-            email
+            email,
+            photo
           });
         }
-        return done(null, user);
+        done(null, user);
       } catch (err) {
         done(err);
       }
@@ -105,8 +115,16 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const email = profile.emails[0].value || profile._json.email;
-        const { id: googleId, displayName: fullName } = profile;
-        const { first_name: firstName, last_name: lastName } = profile._json;
+        const { id: googleId, displayName: fullName, photos } = profile;
+        const {
+          first_name: firstName,
+          last_name: lastName,
+          picture
+        } = profile._json;
+        let photo = picture;
+        if (!photo) {
+          photo = photos.length ? photos[0].value : null;
+        }
         let user = await User.findOne({ googleId });
         if (!user) {
           user = await User.create({
@@ -115,7 +133,7 @@ passport.use(
             email
           });
         }
-        return done(null, user);
+        done(null, user);
       } catch (err) {
         done(err);
       }

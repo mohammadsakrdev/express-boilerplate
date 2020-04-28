@@ -1,12 +1,13 @@
 const express = require('express');
-
 const passport = require('passport');
+
 const requestValidator = require('../../common/middleware/requestValidator');
 const isAuthorized = require('../../common/middleware/isAuthorized');
 const {
   customerRegisterController,
   loginController,
-  successCallbackController,
+  tokenForSocialLoginController,
+  socialCallbackController,
   verifyPhoneNumberController,
   confirmPhoneNumberController,
   verifyEmailController,
@@ -74,15 +75,18 @@ router.put(
   requestValidator(resetPasswordSchema),
   resetPasswordController
 );
-router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+router.get(
+  '/google',
+  passport.authenticate('google', {
+    session: false,
+    scope: ['openid', 'profile', 'email']
+  })
+);
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', {
-    scope: ['openid', 'profile', 'email'],
-    failureRedirect: '/login'
-  }),
-  successCallbackController
+  socialCallbackController('google', ['openid', 'profile', 'email']),
+  tokenForSocialLoginController
 );
 
 // Redirect the user to Facebook for authentication
@@ -90,42 +94,29 @@ router.get(
   '/facebook',
   passport.authenticate('facebook', {
     session: false,
-    scope: [
-      'public_profile',
-      'id',
-      'displayName',
-      'email',
-      'first_name',
-      'last_name',
-      'link'
-    ]
+    scope: ['public_profile', 'email']
   })
 );
 // Facebook will redirect the user to this URL after approval.
 // If access was granted, the user will be logged in. Otherwise authentication has failed.
 router.get(
   '/facebook/callback',
-  passport.authenticate(
-    'facebook',
-    {
-      failureRedirect: '/login'
-    },
-    successCallbackController
-  )
+  socialCallbackController('facebook', ['public_profile', 'email']),
+  tokenForSocialLoginController
 );
 
 router.get(
   '/linkedin',
-  passport.authenticate('linkedin', { scope: ['profile'] })
+  passport.authenticate('linkedin', {
+    session: false,
+    scope: ['profile', 'email']
+  })
 );
 
 router.get(
   '/linkedin/callback',
-  passport.authenticate('linkedin', {
-    scope: ['profile', 'email'],
-    failureRedirect: '/login'
-  }),
-  successCallbackController
+  socialCallbackController('linkedin', ['profile', 'email']),
+  tokenForSocialLoginController
 );
 
 module.exports = router;

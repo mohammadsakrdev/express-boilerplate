@@ -1,6 +1,7 @@
 const customerRegisterController = require('./customer-register');
 const loginController = require('./login');
-const successCallbackController = require('./success-callback');
+const tokenForSocialLoginController = require('./token-for-social-login');
+const socialCallbackController = require('./social-callback');
 const verifyPhoneNumberController = require('./phone-verification');
 const confirmPhoneNumberController = require('./phone-confirmation');
 const verifyEmailController = require('./email-verification');
@@ -11,7 +12,8 @@ const resetPasswordController = require('./password-reset');
 module.exports = {
   customerRegisterController,
   loginController,
-  successCallbackController,
+  tokenForSocialLoginController,
+  socialCallbackController,
   verifyPhoneNumberController,
   confirmPhoneNumberController,
   verifyEmailController,
