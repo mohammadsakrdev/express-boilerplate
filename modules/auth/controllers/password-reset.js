@@ -6,7 +6,7 @@ const asyncHandler = require('../../../common/middleware/async');
 const User = require('../../user/user.schema');
 const generateExpirationDate = require('../../../common/helpers/generate-expiration-date');
 const ErrorResponse = require('../../../common/utils/errorResponse');
-const sendMail = require('../../../common/utils/sendMail');
+const sendMail = require('../../../common/helpers/sendMail');
 const config = require('../../../common/config/config');
 
 // @desc      Reset password

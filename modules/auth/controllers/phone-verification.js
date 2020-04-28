@@ -6,7 +6,7 @@ const User = require('../../user/user.schema');
 const generateOTP = require('../../../common/helpers/generate-otp');
 const generateExpirationDate = require('../../../common/helpers/generate-expiration-date');
 const ErrorResponse = require('../../../common/utils/errorResponse');
-const sendSMS = require('../../../common/utils/sendSMS');
+const sendSMS = require('../../../common/helpers/sendSMS');
 
 // @desc      Verify phone number
 // @route     POST /api/v0/auth/phone/{phoneNumber}/verify
