@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const config = require('../../common/config/config');
 const roles = require('../../common/enum/roles');
@@ -138,6 +139,10 @@ UserSchema.methods.validatePassword = async function(enteredPassword) {
   const isMatch = await bcrypt.compare(enteredPassword, this.password);
   return isMatch;
 };
+
+UserSchema.plugin(uniqueValidator, {
+  message: 'Error, expected {PATH} to be unique.'
+});
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
