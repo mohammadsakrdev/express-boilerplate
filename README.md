@@ -5,13 +5,13 @@ By extension, the idea is sometimes applied to reusable programming, as in “bo
 
 # Build with docker
 
-sudo docker build -t umedme:1.0 .
+sudo docker build -t backend-api .
 
 The . specifies that the build context is the current directory
 
 # Run with docker
 
-sudo docker container run --publish 3000:3000 --detach --name umedmi umedme:1.0
+sudo docker run --rm -d --network host -p 3000:3000 --name backend-api backend-api
 
 --publish asks Docker to forward traffic incoming on the host’s port 3000.
 --detach asks Docker to run this container in the background.
@@ -31,7 +31,7 @@ docker stop <container-id>
 
 # To remove it
 
-sudo docker container rm --force umedmi
+sudo docker container rm --force backend-api
 
 # Remove the stopped container and all of the images, including unused or dangling images
 
