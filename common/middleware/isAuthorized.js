@@ -8,7 +8,7 @@ const passport = require('passport');
 const ErrorResponse = require('../utils/errorResponse');
 const rbac = require('../rbac/rbac');
 
-const isAuthorized = endPointName => {
+const isAuthorized = (endPointName) => {
   return (req, res, next) => {
     try {
       if (
@@ -24,6 +24,9 @@ const isAuthorized = endPointName => {
       passport.authenticate('jwt', { session: false }, async (err, user) => {
         if (err) {
           return next(new ErrorResponse(err.message, INTERNAL_SERVER_ERROR));
+        }
+        if (!user) {
+          return next(new ErrorResponse('Unauthorized', UNAUTHORIZED));
         }
         req.user = user;
         const isAllowed = await rbac.can(req.user.roles, endPointName);
