@@ -49,10 +49,11 @@ module.exports = {
     ],
     'arrow-parens': ['error', 'always'],
     'object-curly-newline': [
-      'error',
+      'warn',
       {
-        consistent: true,
+        ObjectExpression: { multiline: true, minProperties: 1 },
         ObjectPattern: { multiline: true },
+        ImportDeclaration: 'never',
         ExportDeclaration: { multiline: true, minProperties: 3 }
       }
     ],
@@ -87,6 +88,7 @@ module.exports = {
     'array-callback-return': 'off',
     'func-names': ['error', 'never'],
     'no-underscore-dangle': 'off',
-    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }]
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+    'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }]
   }
 };
